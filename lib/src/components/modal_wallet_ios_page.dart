@@ -34,6 +34,7 @@ class _ModalWalletIOSPageState extends State<ModalWalletIOSPage> {
   }
 
   Future<void> init() async {
+    await Future.delayed(const Duration(milliseconds: 100));
     walletData = await iOSWallets();
     setState(() {});
   }
@@ -104,6 +105,8 @@ class _ModalWalletIOSPageState extends State<ModalWalletIOSPage> {
                                   imageUrl:
                                       'https://registry.walletconnect.org/logo/sm/${wallet.id}.jpeg',
                                   height: 40,
+                                  width: 40,
+                                  placeholder: (_, percentage) => Container(),
                                 ),
                               ),
                             );
