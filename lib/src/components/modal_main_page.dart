@@ -48,8 +48,8 @@ class _ModalMainPageState extends State<ModalMainPage> {
                     onValueChanged: (value) => setState(() {
                       _groupValue = value;
                     }),
-                    backgroundColor: Colors.grey.shade300,
-                    padding: const EdgeInsets.all(4),
+                    backgroundColor: Colors.grey.shade200,
+                    padding: const EdgeInsets.all(10),
                     children: {
                       0: Utils.isDesktop
                           ? const QrSegment()
@@ -116,7 +116,8 @@ class _ModalContent extends StatelessWidget {
       if (Utils.isIOS) {
         return ModalWalletIOSPage(uri: uri, walletCallback: walletCallback);
       } else if (Utils.isAndroid) {
-        return ModalWalletAndroidPage(uri: uri);
+        print(uri);
+        return ModalWalletAndroidPage(uri: uri, walletCallback: walletCallback);
       } else {
         return ModalWalletDesktopPage(uri: uri, walletCallback: walletCallback);
       }
@@ -141,13 +142,16 @@ class _Segment extends StatelessWidget {
       onTap: onTap,
       child: SizedBox(
         width: 100,
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+        height: 40,
+        child: Center(
+          child: Text(
+            text.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
           ),
         ),
       ),

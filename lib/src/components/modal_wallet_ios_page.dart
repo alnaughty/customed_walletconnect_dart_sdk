@@ -39,64 +39,109 @@ class ModalWalletIOSPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: walletData.data!.length,
-                    itemBuilder: (context, index) {
-                      final wallet = walletData.data![index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: GestureDetector(
-                          onTap: () async {
-                            walletCallback?.call(wallet);
-                            Utils.iosLaunch(wallet: wallet, uri: uri);
-                          },
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  child: Text(
-                                    wallet.name,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      blurRadius: 5,
-                                      spreadRadius: 2,
-                                    ),
-                                  ],
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      'https://registry.walletconnect.org/logo/sm/${wallet.id}.jpeg',
-                                  height: 30,
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8),
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 20,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (_, index) {
+                    final Wallet wallet = walletData.data![index];
+                    return ListTile(
+                      onTap: () async {
+                        walletCallback?.call(wallet);
+                        await Utils.iosLaunch(wallet: wallet, uri: uri);
+                      },
+                      trailing: const Icon(
+                        Icons.arrow_forward,
+                        size: 20,
+                        color: Colors.grey,
+                      ),
+                      title: Text(
+                        wallet.name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    }),
+                      ),
+                      leading: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 3,
+                              spreadRadius: 2,
+                              offset: const Offset(-3, 3),
+                            ),
+                          ],
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              'https://registry.walletconnect.org/logo/sm/${wallet.id}.jpeg',
+                          height: 40,
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, index) => const Divider(),
+                  itemCount: walletData.data!.length,
+                ),
+                // child: ListView.builder(
+                //     shrinkWrap: true,
+                //     itemCount: walletData.data!.length,
+                //     itemBuilder: (context, index) {
+                //       final wallet = walletData.data![index];
+                //       return Padding(
+                //         padding: const EdgeInsets.symmetric(horizontal: 8),
+                //         child: GestureDetector(
+                //           onTap: () async {
+                //             walletCallback?.call(wallet);
+                //             Utils.iosLaunch(wallet: wallet, uri: uri);
+                //           },
+                //           child: Row(
+                //             children: [
+                //               Expanded(
+                //                 child: Padding(
+                //                   padding:
+                //                       const EdgeInsets.symmetric(vertical: 16),
+                //                   child: Text(
+                //                     wallet.name,
+                //                     style: const TextStyle(
+                //                       fontSize: 18,
+                //                       fontWeight: FontWeight.bold,
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //               Container(
+                //                 clipBehavior: Clip.hardEdge,
+                //                 decoration: BoxDecoration(
+                //                   borderRadius: BorderRadius.circular(8),
+                //                   boxShadow: [
+                //                     BoxShadow(
+                //                       color: Colors.grey.withOpacity(0.3),
+                //                       blurRadius: 5,
+                //                       spreadRadius: 2,
+                //                     ),
+                //                   ],
+                //                 ),
+                //                 child: CachedNetworkImage(
+                //                   imageUrl:
+                //                       'https://registry.walletconnect.org/logo/sm/${wallet.id}.jpeg',
+                //                   height: 30,
+                //                 ),
+                //               ),
+                //               const Padding(
+                //                 padding: EdgeInsets.only(left: 8),
+                //                 child: Icon(
+                //                   Icons.arrow_forward_ios,
+                //                   size: 20,
+                //                   color: Colors.grey,
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       );
+                //     }),
               ),
             ],
           );
