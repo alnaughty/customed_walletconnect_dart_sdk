@@ -1,3 +1,6 @@
+## 0.0.6
+* Updates android ui view
+
 ## 0.0.5
 * Updates example up to support all platforms
 
@@ -13,3 +16,5 @@
 
 ## 0.0.1
 * Initial version supports Dart version of QRCodeModal to connect DApp with supported Wallet through `walletconnect_dart` package.
+
+
