@@ -1,3 +1,7 @@
+## 0.0.7
+* Fix android view issue
+* update ios view
+
 ## 0.0.6
 * Updates android ui view
 

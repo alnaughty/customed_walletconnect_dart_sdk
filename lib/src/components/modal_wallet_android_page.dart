@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:walletconnect_qrcode_modal_dart/src/components/modal_main_page.dart';
@@ -27,101 +28,111 @@ class _ModalWalletAndroidPageState extends State<ModalWalletAndroidPage> {
   List<Wallet>? walletData;
   @override
   void initState() {
-    init();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await init();
+    });
     super.initState();
   }
 
-  void init() async {
+  Future<void> init() async {
     walletData = await androidWallets();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return LayoutBuilder(builder: (context, cnstrnt) {
+      final double width = cnstrnt.maxWidth;
+      final double height = cnstrnt.maxHeight;
+      return SizedBox(
+        width: width,
+        height: height,
         child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 16, bottom: 8),
-          child: Text(
-            walletData == null
-                ? "Fetching wallets"
-                : 'Choose your preferred wallet',
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        Expanded(
-          child: walletData != null
-              ? walletData!.isNotEmpty
-                  ? ListView.separated(
-                      itemBuilder: (_, index) {
-                        final Wallet wallet = walletData![index];
-                        return ListTile(
-                          onTap: () async {
-                            widget.walletCallback?.call(wallet);
-                            await launchUrl(Uri.parse(widget.uri));
-                          },
-                          trailing: const Icon(
-                            Icons.arrow_forward,
-                            size: 20,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            wallet.name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          leading: Container(
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 3,
-                                  spreadRadius: 2,
-                                  offset: const Offset(-3, 3),
-                                ),
-                              ],
-                            ),
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  'https://registry.walletconnect.org/logo/sm/${wallet.id}.jpeg',
-                              height: 40,
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (_, index) => const Divider(),
-                      itemCount: walletData!.length,
-                    )
-                  : const Center(
-                      child: Text(
-                        "No available wallet installed in your device.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-              : Center(
-                  child: CircularProgressIndicator.adaptive(
-                    backgroundColor: Colors.grey.shade200,
-                    // color: Colors.grey,
-                  ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 16, bottom: 8),
+              child: Text(
+                walletData == null
+                    ? "Fetching wallets"
+                    : 'Choose your preferred wallet',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
                 ),
+              ),
+            ),
+            Expanded(
+              child: walletData != null
+                  ? walletData!.isNotEmpty
+                      ? ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: (_, index) {
+                            final Wallet wallet = walletData![index];
+                            return ListTile(
+                              onTap: () async {
+                                widget.walletCallback?.call(wallet);
+                                await launchUrl(Uri.parse(widget.uri));
+                              },
+                              trailing: const Icon(
+                                Icons.arrow_forward,
+                                size: 20,
+                                color: Colors.grey,
+                              ),
+                              title: Text(
+                                wallet.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              leading: Container(
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      blurRadius: 3,
+                                      spreadRadius: 2,
+                                      offset: const Offset(-3, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      'https://registry.walletconnect.org/logo/sm/${wallet.id}.jpeg',
+                                  height: 40,
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (_, index) => const Divider(),
+                          itemCount: walletData!.length,
+                        )
+                      : const Center(
+                          child: Text(
+                            "No available wallet installed in your device.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                  : Center(
+                      child: CircularProgressIndicator.adaptive(
+                        backgroundColor: Colors.grey.shade200,
+                        // color: Colors.grey,
+                      ),
+                    ),
+            ),
+          ],
         ),
-      ],
-    ));
+      );
+    });
   }
 
   Future<bool> isAppInstalled(String? id) async {
